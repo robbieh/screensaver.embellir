@@ -2,12 +2,23 @@
 
 A screensaver for Kodi
 
+Features:
+	* Time, date, and weather visualizations in unusual, non-textual formats
+	* Both round and square format visualizations
+	* Adjustable colors
+	* More data visualzations planned
+
+Currently this is BETA level software and under active development. Use at your own risk.
+
 ### Screenshot Gallery
+
+Square format:
 
 ![large square screenshot](https://raw.githubusercontent.com/robbieh/screensaver.embellir/master/resources/images/embellir.square.large.jpg)
 ![small square screenshot 1](https://raw.githubusercontent.com/robbieh/screensaver.embellir/master/resources/images/embellir.square.small.jpg)
 ![small square screenshot 2](https://raw.githubusercontent.com/robbieh/screensaver.embellir/master/resources/images/embellir.square.small.2.jpg)
 
+Round format:
 
 ![large circle screenshot](https://raw.githubusercontent.com/robbieh/screensaver.embellir/master/resources/images/embellir.circle.fullscreen.jpg)
 ![small circle screenshot](https://raw.githubusercontent.com/robbieh/screensaver.embellir/master/resources/images/embellir.circle.small.jpg)
