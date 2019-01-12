@@ -3,10 +3,11 @@
 A screensaver for Kodi
 
 Features:
-	* Time, date, and weather visualizations in unusual, non-textual formats
-	* Both round and square format visualizations
-	* Adjustable colors
-	* More data visualzations planned
+
+* Time, date, and weather visualizations in unusual, non-textual formats
+* Both round and square format visualizations
+* Adjustable colors
+* More data visualzations planned
 
 Currently this is BETA level software and under active development. Use at your own risk.
 
