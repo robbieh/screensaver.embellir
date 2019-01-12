@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<window type="window">
+    <controls>
+        <control type="image">
+            <description>Overlay</description>
+            <posx>0</posx>
+            <posy>0</posy>
+            <width>1920</width>
+            <height>1080</height>
+            <texture>blackbackground.png</texture>
+            <visible>!String.IsEqual(Window.Property(show-blackbackground),"false")</visible>
+        </control>
+        <control type="image" id="32500">
+            <description>Fade image</description>
+            <posx>0</posx>
+            <posy>0</posy>
+            <fadetime>1000</fadetime>
+            <aspectratio scalediffuse="false" align="center" aligny="center">scale</aspectratio>
+            <width>1920</width>
+            <height>1080</height>
+            <texture></texture>
+            <animation effect="zoom" start="110" end="130" center="auto" time="25000" tween="cubic" easing="inout" condition="StringCompare(Window.Property(animation),panzoom)" pulse="true">Conditional</animation>
+            <animation effect="slide" start="-10,-10" end="20,20" time="9000" tween="cubic" easing="inout" condition="StringCompare(Window.Property(animation),panzoom)" pulse="true">Conditional</animation>
+        </control>
+        <control type="image">
+            <description>Overlay</description>
+            <posx>0</posx>
+            <posy>250</posy>
+            <colordiffuse>FF555555</colordiffuse>
+            <width>1920</width>
+            <height>980</height>
+            <texture>overlayfade.png</texture>
+            <visible>!String.IsEqual(Window.Property(hide-overlay),"true")</visible>
+        </control>
+        <control type="image" id="32505">
+            <description>Visualization</description>
+            <posx>510</posx>
+            <posy>80</posy>
+            <width>900</width>
+            <height>900</height>
+			<cache>False</cache>
+			<aspectratio>keep</aspectratio>
+            <visible>!String.IsEqual(Window.Property(hide-kodi-logo),"true")</visible>
+        </control>
+        <control type="group">
+            <orientation>vertical</orientation>
+            <top>830</top>
+            <right>125</right>
+            <control type="label" id="32503">
+                <description>Line one</description>
+                <font>font13</font>
+                <shadowcolor>22000000</shadowcolor>
+                <textcolor>whitesmoke</textcolor>
+                <top>90</top>
+                <right>0</right>
+                <height>30</height>
+                <width>1000</width>
+                <align>right</align>
+                <label></label>
+                <animation effect="fade" start="100" end="0" time="15000">Visible</animation>
+                <visible>!String.IsEqual(Window.Property(hide-pic-info),"true")</visible>
+            </control>
+            <control type="label" id="32504">
+                <description>Line two</description>
+                <font>font13</font>
+                <shadowcolor>22000000</shadowcolor>
+                <textcolor>whitesmoke</textcolor>
+                <top>130</top>
+                <right>0</right>
+                <height>30</height>
+                <width>1000</width>
+                <align>right</align>
+                <label></label>
+                <animation effect="fade" start="100" end="0" time="15000">Visible</animation>
+                <visible>!String.IsEqual(Window.Property(hide-pic-info),"true")</visible>
+            </control>
+        </control>
+    </controls>
+</window>

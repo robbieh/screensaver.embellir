@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="screensaver.embellir" name="Embellir" version="0.0.1" provider-name="Nundrum">
+	<requires>
+		<import addon="xbmc.python" version="2.25.0"/>
+		<import addon="script.module.requests"/>
+		<import addon="script.module.pil"/>
+	</requires>
+	<extension point="xbmc.ui.screensaver" library="entrypoint.py" />
+	<extension point="xbmc.addon.metadata">
+		<platform>all</platform>
+		<license>I'M-STILL-WORKING-ON-IT</license>
+		<source>https://github.com/robbieh/screensaver.embellir</source>
+		<forum>https://forum.kodi.tv/showthread.php?tid=WAITFORIT</forum>
+		<summary lang="en_US">Embellish your Kodi</summary>
+		<description lang="en_US">Display your pictures along with beautiful visualizations of your personal data.</description>
+		<news>v0.0.1
+			[new] It's alive!
+		</news>
+		<assets>
+			<icon>resources/images/icon.png</icon>
+			<screenshot>resources/images/kodi.screenshot.png</screenshot>
+		</assets>
+	</extension>
+</addon>

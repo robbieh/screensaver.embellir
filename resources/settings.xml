@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings>
+	<category label="32002">
+		<setting label="32008" type="slider" id="wait-time-before-changing-image" default="20" range="10,1,3600" option="int" />
+		<setting label="32003" type="enum" id="screensaver-mode" default="0" lvalues="32004|32005|32006"/>
+		<setting label="32009" type="folder" id="my-pictures-folder" source="auto" option="writeable" visible="eq(-1,1)|eq(-1,2)"/>
+		<setting label="clock viz" type="enum" id="clock-mode" default="0" lvalues="square|circle|off"/>
+		<setting label="weather viz" type="enum" id="weather-mode" default="0" lvalues="on|off"/>
+		<setting label="clock position" type="enum" id="clock-position" default="0" lvalues="center|corner"/>
+	</category>
+	<category label="Colors">
+		<setting label="Primary color - red" type="slider" id="primary-red" default="255" range="0,255" option="int" />
+		<setting label="Primary color - green" type="slider" id="primary-green" default="255" range="0,255" option="int" />
+		<setting label="Primary color - blue" type="slider" id="primary-blue" default="255" range="0,255" option="int" />
+		<setting label="Primary color - alpha" type="slider" id="primary-alpha" default="255" range="0,255" option="int" />
+		<setting label="Secondary color - red" type="slider" id="secondary-red" default="255" range="0,255" option="int" />
+		<setting label="Secondary color - green" type="slider" id="secondary-green" default="255" range="0,255" option="int" />
+		<setting label="Secondary color - blue" type="slider" id="secondary-blue" default="255" range="0,255" option="int" />
+		<setting label="Secondary color - alpha" type="slider" id="secondary-alpha" default="255" range="0,255" option="int" />
+		<setting label="Tertiary color - red" type="slider" id="tertiary-red" default="255" range="0,255" option="int" />
+		<setting label="Tertiary color - green" type="slider" id="tertiary-green" default="255" range="0,255" option="int" />
+		<setting label="Tertiary color - blue" type="slider" id="tertiary-blue" default="255" range="0,255" option="int" />
+		<setting label="Tertiary color - alpha" type="slider" id="tertiary-alpha" default="255" range="0,255" option="int" />
+	</category>
+	<category label="32011">
+        <setting label="32015" type="bool" id="hide-pic-info" default="false"/>
+        <setting label="32020" type="bool" id="hide-overlay" default="false"/>
+        <setting label="32021" type="bool" id="show-blackbackground" default="false"/>
+    </category>
+    <category label="32016">
+        <setting label="32017" type="enum" id="animation" lvalues="32018|32019" default="0"/>
+    </category>
+</settings>
