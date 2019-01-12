@@ -85,11 +85,11 @@ class EmbellirVizRound(EmbellirVizBase):
         rm = size * 0.99
         rd = size * 0.95
         rH = size * 0.80
-        rM = size * 0.50
-        rS = size * 0.40
+        rM = size * 0.40
+        rS = size * 0.30
 
-        drm = Drundle(color=self.config['primarycolor'], draw=draw)
-        drd = Drundle(color=self.config['primarycolor'], draw=draw)
+        drm = Drundle(color=self.config['secondarycolor'], draw=draw)
+        drd = Drundle(color=self.config['tertiarycolor'], draw=draw)
         drH = Drundle(color=self.config['primarycolor'], draw=draw)
         drM = Drundle(color=self.config['secondarycolor'], draw=draw)
         drS = Drundle(color=self.config['tertiarycolor'], draw=draw)
@@ -100,6 +100,10 @@ class EmbellirVizRound(EmbellirVizBase):
         drH.circleArc(x+half,y+half,rH,0,hourDegrees,width=30)
         drM.circleArc(x+half,y+half,rM,0,minuteDegrees,width=30)
         drS.circleArc(x+half,y+half,rS,minuteDegrees,minuteDegrees + secondDegrees,width=20)
+        #drp.circleArc(0,0,rd,start,
+        #        start+(dayDegrees*outlook)+1,width=10)
+        #drc.circleArc(0,0,rd,dayStart+dayDegrees*(F-1)+1,
+        #        dayStart+dayDegrees*(F-1)+dayDegrees-1,width=30)
 
     def drawCalibrationRings(self,draw):
         size=self.size
@@ -126,22 +130,25 @@ class EmbellirVizRound(EmbellirVizBase):
         targetRing = 0.6
         ring = size * targetRing
         rrad = ring * 0.5
+        dayDegrees = (360 / calendar.monthrange(now.tm_year, now.tm_mon)[1])
+        dayStart = dayDegrees * now.tm_mday
 
-        drt = Drundle(color=self.config['primarycolor'], draw=draw)
-        drp = Drundle(color=self.config['secondarycolor'], draw=draw)
-        forecastSizeMax=drt.pointDistance(drt.calcCircle(0,rrad),drt.calcCircle(30,rrad))
+        drt = Drundle(color=self.config['primarycolor'], draw=draw) #temp
+        drp = Drundle(color=self.config['secondarycolor'], draw=draw) #precip
+        forecastSizeMax=drt.pointDistance(drt.calcCircle(0,rrad),
+                drt.calcCircle(30,rrad))
         #self.log(forecastSizeMax)
         forecastSize=min(forecastSizeMax,
                 (size*(targetRing+0.1) - size*(targetRing-0.1)) * 0.5)
 
-
+        #hourly forecast circles
         drt.translate(half, half)
         drp.translate(half, half)
-        forecast=self.weather.weather['hourly']
-        #self.log(forecast)
-        for F in forecast:
-            temp=forecast[F]['temperature']
-            precip=forecast[F]['precipitation']
+        hourlyForecast=self.weather.weather['hourly']
+        #self.log(hourlyForecast)
+        for F in hourlyForecast:
+            temp=hourlyForecast[F]['temperature']
+            precip=hourlyForecast[F]['precipitation']
             hour = now.tm_hour % 12
             hourDegree = hour * 30 + (F-1) * 30
             #self.log((F,temp,hour))
@@ -152,9 +159,47 @@ class EmbellirVizRound(EmbellirVizBase):
             tempArc = (360/100) * temp * 0.5
             precipArc = (360/100) * precip * 0.5
             drt.circleChord(0,0,forecastSize,0-tempArc+mid,tempArc+mid)
-            drp.circleArc(0,0,forecastSize,0-precipArc+mid,precipArc+mid)
+            drp.circleArc(0,0,forecastSize,0-precipArc+mid,precipArc+mid,width=5)
             drt.detranslate()
             drp.detranslate()
+
+        #daily forecast circles
+        drc = Drundle(color=(255,0,0,0), draw=draw) #clear
+        drc.translate(half, half)
+        drD = Drundle(color=self.config['tertiarycolor'], draw=draw) #day
+        drD.translate(half, half)
+
+        dailyForecast=self.weather.weather['daily']
+        #self.log(dailyForecast)
+        for F in dailyForecast:
+            high=dailyForecast[F]['high']
+            low=dailyForecast[F]['low']
+            outlook=dailyForecast[F]['outlook']
+            if high==None or low==None or outlook==None:
+                continue
+            self.log((low,high,outlook))
+            low = min(low,120)
+            low = max(low,0)
+            high = min(high,120)
+            high = max(high,0)
+            high=high/120.0
+            low=low/120.0
+            outlook=outlook/100.0
+            rd = size * 0.95
+            #xpos,ypos=drt.calcCircle(hourDegree,rrad)
+            start=dayStart+dayDegrees*(F-1)
+            drD.circleArc(0,0,rd,start,
+                    start+dayDegrees,width=40)
+            drc.circleArc(0,0,rd,start+0.5,
+                    start+dayDegrees-0.5,width=30)
+            #drc.circleArc(0,0,rd,dayStart+dayDegrees*(F-1)+1,
+            #        dayStart+dayDegrees*(F-1)+dayDegrees-1,width=30)
+            drt.circleArc(0,0,rd,start+1+(dayDegrees*low),
+                    start+1+(dayDegrees*high),width=30)
+            drp.circleArc(0,0,rd,start,
+                    start+(dayDegrees*outlook)+1,width=10)
+        drt.detranslate()
+        drp.detranslate()
 
 class EmbellirVizSquare(EmbellirVizBase):
 

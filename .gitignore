@@ -1,5 +1,5 @@
 .DS_Store
 .idea/
 *.pyo
-.sw[op]
+*.sw[op]
 private/
