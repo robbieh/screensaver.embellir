@@ -118,7 +118,7 @@ class Drundle():
         s=self
         if centered:
             half=size*0.5
-            self.arc([s.ref_x+x-half,s.ref_y+y-half, s.ref_x+x+half,s.ref_y+y+half], start, end, self.color, width, abs(start-end))
+            self.arc([s.ref_x+x-half,s.ref_y+y-half, s.ref_x+x+half,s.ref_y+y+half], start, end, self.color, width, segments=abs(start-end))
         else:
             self.arc([s.ref_x+x,s.ref_y+y,
                 s.ref_x+x+s,s.ref_y+y+s], start, end, width, fill=self.color)

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="screensaver.embellir" name="Embellir" version="0.0.1" provider-name="Nundrum">
+<addon id="screensaver.embellir" name="Embellir" version="0.0.1-beta" provider-name="Nundrum">
 	<requires>
 		<import addon="xbmc.python" version="2.25.0"/>
 		<import addon="script.module.requests"/>
@@ -13,7 +13,7 @@
 		<forum>https://forum.kodi.tv/showthread.php?tid=WAITFORIT</forum>
 		<summary lang="en_US">Embellish your Kodi</summary>
 		<description lang="en_US">Display your pictures along with beautiful visualizations of your personal data.</description>
-		<news>v0.0.1
+		<news>v0.0.1-beta
 			[new] It's alive!
 		</news>
 		<assets>

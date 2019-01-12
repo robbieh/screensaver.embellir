@@ -65,7 +65,7 @@ class EmbellirVizRound(EmbellirVizBase):
         self.x = kwargs['x']
         self.y = kwargs['y']
         self.config = kwargs['config']
-        self.log(self.weather.weather)
+        #self.log(self.weather.weather)
 
     def drawTime(self,draw):
         #self.drawCalibrationRings(draw)
@@ -82,11 +82,11 @@ class EmbellirVizRound(EmbellirVizBase):
         secondDegrees = now.tm_sec * self.sixtieth
 
         #radius
-        rm = size * 0.99
-        rd = size * 0.95
-        rH = size * 0.80
-        rM = size * 0.40
-        rS = size * 0.30
+        rm = size * 0.95
+        rd = size * 0.85
+        rH = size * 0.60
+        rM = size * 0.20
+        rS = size * 0.10
 
         drm = Drundle(color=self.config['secondarycolor'], draw=draw)
         drd = Drundle(color=self.config['tertiarycolor'], draw=draw)
@@ -98,8 +98,8 @@ class EmbellirVizRound(EmbellirVizBase):
         drm.circleArc(x+half,y+half,rm,0,monthDegrees)
         drd.circleArc(x+half,y+half,rd,0,dayDegrees)
         drH.circleArc(x+half,y+half,rH,0,hourDegrees,width=30)
-        drM.circleArc(x+half,y+half,rM,0,minuteDegrees,width=30)
-        drS.circleArc(x+half,y+half,rS,minuteDegrees,minuteDegrees + secondDegrees,width=20)
+        drM.circleArc(x+half,y+half,rM,0,minuteDegrees,width=20)
+        drS.circleArc(x+half,y+half,rS,minuteDegrees,minuteDegrees + secondDegrees,width=10)
         #drp.circleArc(0,0,rd,start,
         #        start+(dayDegrees*outlook)+1,width=10)
         #drc.circleArc(0,0,rd,dayStart+dayDegrees*(F-1)+1,
@@ -127,11 +127,12 @@ class EmbellirVizRound(EmbellirVizBase):
         half=size * 0.5
         x=self.x
         y=self.y
-        targetRing = 0.6
+        targetRing = 0.4
         ring = size * targetRing
         rrad = ring * 0.5
         dayDegrees = (360 / calendar.monthrange(now.tm_year, now.tm_mon)[1])
         dayStart = dayDegrees * now.tm_mday
+        rd = size * 0.85
 
         drt = Drundle(color=self.config['primarycolor'], draw=draw) #temp
         drp = Drundle(color=self.config['secondarycolor'], draw=draw) #precip
@@ -177,7 +178,7 @@ class EmbellirVizRound(EmbellirVizBase):
             outlook=dailyForecast[F]['outlook']
             if high==None or low==None or outlook==None:
                 continue
-            self.log((low,high,outlook))
+            #self.log((low,high,outlook))
             low = min(low,120)
             low = max(low,0)
             high = min(high,120)
@@ -185,7 +186,6 @@ class EmbellirVizRound(EmbellirVizBase):
             high=high/120.0
             low=low/120.0
             outlook=outlook/100.0
-            rd = size * 0.95
             #xpos,ypos=drt.calcCircle(hourDegree,rrad)
             start=dayStart+dayDegrees*(F-1)
             drD.circleArc(0,0,rd,start,
@@ -196,7 +196,7 @@ class EmbellirVizRound(EmbellirVizBase):
             #        dayStart+dayDegrees*(F-1)+dayDegrees-1,width=30)
             drt.circleArc(0,0,rd,start+1+(dayDegrees*low),
                     start+1+(dayDegrees*high),width=30)
-            drp.circleArc(0,0,rd,start,
+            drp.circleArc(0,0,rd,start+1,
                     start+(dayDegrees*outlook)+1,width=10)
         drt.detranslate()
         drp.detranslate()
