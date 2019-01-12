@@ -3,7 +3,9 @@
 A screensaver for Kodi
 
 
-### Screenshots
+### Screenshot Gallery
+
+![large square screenshot](https://raw.githubusercontent.com/robbieh/screensaver.embellir/master/resources/images/embellir.square.large.jpg)
 
 
 
