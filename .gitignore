@@ -3,3 +3,4 @@
 *.pyo
 *.sw[op]
 private/
+releases/
