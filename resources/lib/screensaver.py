@@ -31,9 +31,9 @@ import viz
 import time
 import controller
 
+
 PATH = xbmcaddon.Addon().getAddonInfo("path")
 IMAGE_FILE = os.path.join(PATH, "resources", "images", "chromecast.json")
-TEMP = xbmc.translatePath("special://temp")
 
 class Embellir(xbmcgui.WindowXMLDialog):
 
@@ -57,12 +57,14 @@ class Embellir(xbmcgui.WindowXMLDialog):
         self.images = []
         self.set_property()
         self.utils = ScreenSaverUtils()
+        self.tmp = kodiutils.get_temp_path()
+        self.log(self.tmp)
 
     def log(self,msg):
         xbmc.log(str(msg), level=xbmc.LOGNOTICE)
 
     def setClockImage(self, config):
-        filename=os.path.join(TEMP, "tmpkodi-" + str(int(time.time())) + ".png")
+        filename=os.path.join(self.tmp, "tmpkodi-" + str(int(time.time())) + ".png")
         size=config['size']
         im = Image.new("RGBA",(size,size), (0,0,0,0))
         draw = ImageDraw.Draw(im)

@@ -20,6 +20,8 @@ import xbmc
 import xbmcaddon
 import xbmcgui
 import json as json
+import os
+import sys
 
 ADDON = xbmcaddon.Addon()
 ADDON_ID = ADDON.getAddonInfo("id")
@@ -91,3 +93,23 @@ def kodi_json_request(params):
         log("[%s] %s" %
                     (params['method'], response['error']['message']),level=xbmc.LOGWARNING)
         return None
+
+def get_temp_path():
+    kodi_temp = os.path.realpath(xbmc.translatePath("special://temp"))
+    #check for tmpfs so we can avoid disk thrashing
+    if sys.platform == 'linux2':
+        try:
+            with open("/proc/mounts", "r") as mounts:
+                for mount in mounts:
+                    fs, path, remainder=mount.split(' ',2)
+                    xbmc.log(str((fs, path)),xbmc.LOGNOTICE)
+                    if fs == 'tmpfs':
+                        if os.access(path, os.R_OK) and os.access(path, os.W_OK):
+                            return path
+        except IOError:
+            pass
+    return kodi_temp
+
+
+
+
