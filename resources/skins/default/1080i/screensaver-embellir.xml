@@ -38,9 +38,10 @@
             <posy>80</posy>
             <width>900</width>
             <height>900</height>
-			<cache>False</cache>
-			<aspectratio>keep</aspectratio>
-            <visible>!String.IsEqual(Window.Property(hide-kodi-logo),"true")</visible>
+            <cache>False</cache>
+            <texture></texture>
+            <aspectratio>keep</aspectratio>
+            <visible>True</visible>
         </control>
         <control type="group">
             <orientation>vertical</orientation>
