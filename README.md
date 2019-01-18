@@ -1,5 +1,9 @@
 # screensaver.embellir
 
+*PLEASE NOTE* this is the very experimental branch which tries to use a
+built-in http server instead of writing to disk. This might not work well with
+Kodi.
+
 A screensaver for Kodi
 
 Features:
