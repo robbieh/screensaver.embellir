@@ -43,6 +43,17 @@
             <aspectratio>keep</aspectratio>
             <visible>True</visible>
         </control>
+        <control type="image" id="32506">
+            <description>Visualization II</description>
+            <posx>510</posx>
+            <posy>80</posy>
+            <width>900</width>
+            <height>900</height>
+            <cache>False</cache>
+            <texture></texture>
+            <aspectratio>keep</aspectratio>
+            <visible>True</visible>
+        </control>
         <control type="group">
             <orientation>vertical</orientation>
             <top>830</top>

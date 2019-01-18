@@ -58,28 +58,32 @@ class Embellir(xbmcgui.WindowXMLDialog):
         self.set_property()
         self.utils = ScreenSaverUtils()
         self.tmp = kodiutils.get_temp_path()
-        self.log(self.tmp)
+        self.firstImage = True
 
     def log(self,msg):
         xbmc.log(str(msg), level=xbmc.LOGNOTICE)
 
-    def setClockImage(self, config):
-        filename=os.path.join(self.tmp, "tmpkodi-" + str(int(time.time())) + ".png")
-        size=config['size']
-        im = Image.new("RGBA",(size,size), (0,0,0,0))
-        draw = ImageDraw.Draw(im)
-        self.viz.drawTime(draw)
-        self.viz.drawWeather(draw)
-        im.save(filename)
-        del draw
-        del im
-        self.logo.setImage(filename, useCache=False)
-        xbmc.sleep(200)
-        os.remove(filename)
-
     def drawVisualizations(self, config):
         #if clock...
-        self.setClockImage(config)
+        if self.firstImage:
+            t = str(time.gmtime().tm_sec)
+            self.log(t + " first")
+            self.logo1.setImage("http://localhost:48811/drawTime/" + str(time.time()), useCache=False)
+            self.logo1.setVisible(True)
+            #xbmc.sleep(500)
+            self.logo2.setVisible(False)
+            self.firstImage=False
+            self.log(t + " first ended")
+        else:
+            t = str(time.gmtime().tm_sec)
+            self.log(t + " second")
+            self.logo2.setImage("http://localhost:48811/drawTime/" + str(time.time()), useCache=False)
+            self.logo2.setVisible(True)
+            #xbmc.sleep(500)
+            self.logo1.setVisible(False)
+            self.firstImage=True
+            self.log(t + " second ended")
+        #xbmc.sleep(200)
 
     def onInit(self):
         self._isactive = True
@@ -90,7 +94,8 @@ class Embellir(xbmcgui.WindowXMLDialog):
         self.metadata_line2 = self.getControl(32503)
         self.metadata_line3 = self.getControl(32504)
 
-        self.logo = self.getControl(32505)
+        self.logo1 = self.getControl(32505)
+        self.logo2 = self.getControl(32506)
 
         config={'size': 900}
         config.update({
@@ -122,12 +127,20 @@ class Embellir(xbmcgui.WindowXMLDialog):
         elif mode == 1:
             self.viz = viz.EmbellirVizRound(size=900,x=0,y=0,config=config)
         if kodiutils.get_setting_as_int("clock-position") == 1:
-            self.logo.setWidth(400)
-            self.logo.setHeight(400)
-            self.logo.setPosition(1920-500,1080-500)
+            self.logo1.setWidth(400)
+            self.logo1.setHeight(400)
+            self.logo1.setPosition(1920-500,1080-500)
+            self.logo2.setWidth(400)
+            self.logo2.setHeight(400)
+            self.logo2.setPosition(1920-500,1080-500)
+
+        #start http server for selected viz
+        self.vizhttp = viz.EmbellirVizServer(self.viz)
+        self.vizhttp.start_server()
+
 
         #start timer controller for clock image redraw
-        self.cont = controller.Controller(self.log, self.drawVisualizations, config, 60)
+        self.cont = controller.Controller(self.log, self.drawVisualizations, config, 120)
         self.cont.start()
 
         # Start Image display loop
@@ -218,9 +231,15 @@ class Embellir(xbmcgui.WindowXMLDialog):
 
 
     def exit(self):
+        self.logo.setImage("http://localhost:48811/exit", useCache=False)
+        #for t in threading.enumerate():
+        #    if t == threading.current_thread():
+        #        continue
+        #    self.
         self._isactive = False
         # Delete the monitor from memory so we can gracefully remove
         # the screensaver window from memory too
+        exit_response = requests.get('http://localhost:84411/exit')
         if self.exit_monitor:
             del self.exit_monitor
         # Finally call close so doModal returns

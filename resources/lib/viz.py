@@ -18,6 +18,8 @@
 """
 import xbmc
 import os
+import io
+import sys
 import json
 import requests
 import xbmcgui
@@ -33,6 +35,8 @@ import calendar
 import controller
 import operator
 import random
+from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
+import threading 
 
 TEMP = xbmc.translatePath("special://temp")
 
@@ -40,15 +44,60 @@ def last_day_of_month(any_day):
     next_month = any_day.replace(day=28) + datetime.timedelta(days=4)  # this will never fail
     return next_month - datetime.timedelta(days=next_month.day)
 
+class EmbellirVizServer(HTTPServer):
+    def __init__(self, viz):
+        self.viz = viz
+        HTTPServer.__init__(self,('127.0.0.1', 48811), EmbellirHTTPRequstHandler)
+        xbmc.log("Created http server", xbmc.LOGNOTICE)
+
+    def start_server(self):
+        try:
+            thread = threading.Thread(target = self.serve_forever)
+            thread.start()
+            xbmc.log("started thread", xbmc.LOGNOTICE)
+        except KeyboardInterrupt:
+            self.socket.close()
+
+class EmbellirHTTPRequstHandler(BaseHTTPRequestHandler):
+    def do_HEAD(self):
+        self.send_response(200)
+        self.send_header('Content-type','image/png')
+        self.end_headers()
+
+    def do_GET(self):
+        xbmc.log(str(time.gmtime().tm_sec) + " serving: " + self.path, xbmc.LOGNOTICE)
+        try:
+            path = self.path.lstrip('/').split('/')[0]
+            #xbmc.log("path: " + path, xbmc.LOGNOTICE)
+            if path == "exit":
+                xbmc.log("exiting http", xbmc.LOGNOTICE)
+                self.server.stop_server()
+            fn = getattr(self.server.viz, path)
+            response = fn()
+            self.send_response(200)
+            self.send_header('Content-length',len(response))
+            self.send_header('Content-type','image/png')
+            self.end_headers()
+            self.wfile.write(response)
+        except Exception as e:
+            self.send_response(400)
+            self.wfile.write(str(e))
+            self.end_headers()
+            xbmc.log("Failed to get " + self.path, xbmc.LOGNOTICE)
+            xbmc.log(str(e), xbmc.LOGNOTICE)
+
 class EmbellirVizBase():
 
     def __init__(self, *args, **kwargs):
         pass
 
-    def drawTime(self,draw):
+    def exit():
+        self.exit()
+
+    def drawTime(self):
         raise NotImplementedError
 
-    def drawWeather(self,draw):
+    def drawWeather(self):
         raise NotImplementedError
 
     def log(self,msg):
@@ -66,9 +115,14 @@ class EmbellirVizRound(EmbellirVizBase):
         self.y = kwargs['y']
         self.config = kwargs['config']
         #self.log(self.weather.weather)
+        self.image = Image.new("RGBA",(self.size,self.size), (0,0,0,0))
+        self.draw = ImageDraw.Draw(self.image)
 
-    def drawTime(self,draw):
+    def drawTime(self):
+        xbmc.log("in drawTime", xbmc.LOGNOTICE)
         #self.drawCalibrationRings(draw)
+        self.draw.rectangle((0,0,size,size),fill=(0,0,0,0))
+        draw=self.draw
         size=self.size
         half=size * 0.5
         x=self.x
@@ -104,8 +158,12 @@ class EmbellirVizRound(EmbellirVizBase):
         #        start+(dayDegrees*outlook)+1,width=10)
         #drc.circleArc(0,0,rd,dayStart+dayDegrees*(F-1)+1,
         #        dayStart+dayDegrees*(F-1)+dayDegrees-1,width=30)
+        with io.BytesIO() as content:
+            self.image.save(content, format='PNG')
+            return content.getvalue()
 
-    def drawCalibrationRings(self,draw):
+    def drawCalibrationRings(self):
+        draw=self.draw
         size=self.size
         half=size * 0.5
         calibrate = Drundle(color=(125,125,125,125), draw=draw)
@@ -121,7 +179,8 @@ class EmbellirVizRound(EmbellirVizBase):
         calibrate.circleArc(0,0,size*0.2,0,360,width=5)
         calibrate.circleArc(0,0,size*0.1,0,360,width=5)
 
-    def drawWeather(self,draw):
+    def drawWeather(self):
+        draw = self.draw
         now = time.localtime()
         size=self.size
         half=size * 0.5
@@ -208,7 +267,8 @@ class EmbellirVizSquare(EmbellirVizBase):
         self.x = kwargs['x']
         self.y = kwargs['y']
         self.config = kwargs['config']
-
+        self.image = Image.new("RGBA",(self.size,self.size), (0,0,0,0))
+        self.draw = ImageDraw.Draw(self.image)
 
         self.paddingSize=self.size / 70
         self.boxSize=(self.size - (self.paddingSize * 3)) / 4
@@ -230,7 +290,7 @@ class EmbellirVizSquare(EmbellirVizBase):
                 (p*0+b*0, p*0+b*0),
                 (p*1+b*1, p*0+b*0),
                 ]
-        self.log(self.hourPositions)
+        #self.log(self.hourPositions)
         self.minuteSize=self.boxSize / 5
         self.hourSize=self.minuteSize * 3 - self.paddingSize * 2
         self.hourOffset=self.minuteSize + self.paddingSize
@@ -253,8 +313,11 @@ class EmbellirVizSquare(EmbellirVizBase):
         #self.log(self.paddingSize)
         #self.log(self.boxSize)
 
-    def drawTime(self,draw):
+    def drawTime(self):
+        self.log(self)
         size=self.size
+        self.draw.rectangle((0,0,size,size),fill=(0,0,0,0))
+        draw = self.draw
         x=self.x
         y=self.y
         p=self.paddingSize
@@ -287,7 +350,10 @@ class EmbellirVizSquare(EmbellirVizBase):
             o = self.secondsOffset
             drS.square(self.secondsGrid[s][0]*ss+o,self.secondsGrid[s][1]*ss+o,
                     ss,centered=False)
+        with io.BytesIO() as content:
+            self.image.save(content, format='PNG')
+            return content.getvalue()
 
-    def drawWeather(self,draw):
+    def drawWeather(self,):
         pass
 

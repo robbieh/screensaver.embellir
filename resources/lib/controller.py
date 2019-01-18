@@ -23,12 +23,13 @@ class Controller(threading.Thread):
              self.draw_callback(self.config)
              #TODO
              #if (self.now.second % self.redrawInterval == 0):
-             #   self.drawClock_callback(False)
+             #   self.draw_callback(False)
              #elif (self.showSeconds):
-             #   self.drawClock_callback(True)
+             #   self.draw_callback(True)
 
-             self.waitFor =  1000000 - self.now.microsecond
-             self.waitCondition.wait(float(self.waitFor) / 1000000)
+             #self.waitFor =  1000000 - self.now.microsecond
+             #self.waitCondition.wait(float(self.waitFor) / 1000000)
+             self.waitCondition.wait(2)
         self.waitCondition.release()
 
 

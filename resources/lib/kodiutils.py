@@ -102,7 +102,6 @@ def get_temp_path():
             with open("/proc/mounts", "r") as mounts:
                 for mount in mounts:
                     fs, path, remainder=mount.split(' ',2)
-                    xbmc.log(str((fs, path)),xbmc.LOGNOTICE)
                     if fs == 'tmpfs':
                         if os.access(path, os.R_OK) and os.access(path, os.W_OK):
                             return path
