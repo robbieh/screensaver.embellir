@@ -59,6 +59,12 @@ class EmbellirVizServer(HTTPServer):
             self.socket.close()
 
 class EmbellirHTTPRequstHandler(BaseHTTPRequestHandler):
+
+    def log(self,msg):
+        t = time.localtime()
+        tstr = str(t.tm_min) + ":" + str (t.tm_sec) + " "
+        xbmc.log(tstr + str(msg), level=xbmc.LOGNOTICE)
+
     def do_HEAD(self):
         self.send_response(200)
         self.send_header('Content-type','image/png')
@@ -68,9 +74,9 @@ class EmbellirHTTPRequstHandler(BaseHTTPRequestHandler):
         xbmc.log(str(time.gmtime().tm_sec) + " serving: " + self.path, xbmc.LOGNOTICE)
         try:
             path = self.path.lstrip('/').split('/')[0]
-            #xbmc.log("path: " + path, xbmc.LOGNOTICE)
+            self.log("path: " + path)
             if path == "exit":
-                xbmc.log("exiting http", xbmc.LOGNOTICE)
+                self.log("exiting http")
                 self.server.stop_server()
             fn = getattr(self.server.viz, path)
             response = fn()
@@ -83,8 +89,8 @@ class EmbellirHTTPRequstHandler(BaseHTTPRequestHandler):
             self.send_response(400)
             self.wfile.write(str(e))
             self.end_headers()
-            xbmc.log("Failed to get " + self.path, xbmc.LOGNOTICE)
-            xbmc.log(str(e), xbmc.LOGNOTICE)
+            self.log("Failed to get ")
+            self.log(str(e))
 
 class EmbellirVizBase():
 

@@ -20,6 +20,7 @@ class Controller(threading.Thread):
         self.waitCondition.acquire()
         while not self.shouldStop():
              self.now = datetime.datetime.today()
+             self.log_callback("controller loop executing")
              self.draw_callback(self.config)
              #TODO
              #if (self.now.second % self.redrawInterval == 0):

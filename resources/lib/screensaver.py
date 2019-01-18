@@ -30,7 +30,7 @@ from PIL import Image, ImageDraw
 import viz
 import time
 import controller
-
+import threading
 
 PATH = xbmcaddon.Addon().getAddonInfo("path")
 IMAGE_FILE = os.path.join(PATH, "resources", "images", "chromecast.json")
@@ -61,7 +61,9 @@ class Embellir(xbmcgui.WindowXMLDialog):
         self.firstImage = True
 
     def log(self,msg):
-        xbmc.log(str(msg), level=xbmc.LOGNOTICE)
+        t = time.localtime()
+        tstr = str(t.tm_min) + ":" + str (t.tm_sec) + " "
+        xbmc.log(tstr + str(msg), level=xbmc.LOGNOTICE)
 
     def drawVisualizations(self, config):
         #if clock...
@@ -70,7 +72,6 @@ class Embellir(xbmcgui.WindowXMLDialog):
             self.log(t + " first")
             self.logo1.setImage("http://localhost:48811/drawTime/" + str(time.time()), useCache=False)
             self.logo1.setVisible(True)
-            #xbmc.sleep(500)
             self.logo2.setVisible(False)
             self.firstImage=False
             self.log(t + " first ended")
@@ -79,7 +80,6 @@ class Embellir(xbmcgui.WindowXMLDialog):
             self.log(t + " second")
             self.logo2.setImage("http://localhost:48811/drawTime/" + str(time.time()), useCache=False)
             self.logo2.setVisible(True)
-            #xbmc.sleep(500)
             self.logo1.setVisible(False)
             self.firstImage=True
             self.log(t + " second ended")
@@ -140,7 +140,7 @@ class Embellir(xbmcgui.WindowXMLDialog):
 
 
         #start timer controller for clock image redraw
-        self.cont = controller.Controller(self.log, self.drawVisualizations, config, 120)
+        self.cont = controller.Controller(self.log, self.drawVisualizations, config, 60)
         self.cont.start()
 
         # Start Image display loop
@@ -231,15 +231,14 @@ class Embellir(xbmcgui.WindowXMLDialog):
 
 
     def exit(self):
-        self.logo.setImage("http://localhost:48811/exit", useCache=False)
-        #for t in threading.enumerate():
-        #    if t == threading.current_thread():
-        #        continue
-        #    self.
+        self.log("stopping")
         self._isactive = False
         # Delete the monitor from memory so we can gracefully remove
         # the screensaver window from memory too
-        exit_response = requests.get('http://localhost:84411/exit')
+        try:
+            exit_response = requests.get('http://localhost:84411/exit')
+        except Exception:
+            pass
         if self.exit_monitor:
             del self.exit_monitor
         # Finally call close so doModal returns
